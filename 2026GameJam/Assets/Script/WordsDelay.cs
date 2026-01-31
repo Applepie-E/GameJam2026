@@ -36,7 +36,7 @@ public class WordsDelay : MonoBehaviour
         if (currentIndex >= words.Count)
         {   
 
-            SceneManager.LoadScene(""); // 切换场景到
+            SceneManager.LoadScene(""); // 切换场景到""
             return; // 如果所有文字都已显示完毕，停止更新
         }
 
