@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
             {
                 if(colliders!= null)
                 {
+                    Debug.Log("exchange");
                     Transform transformMid= colliders.transform.parent;
                     Vector3 v3 = colliders.transform.position;
                     Quaternion v3r = colliders.transform.rotation;
