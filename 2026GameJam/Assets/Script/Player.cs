@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
 
                     transform.parent=transformMid;
                     transform.position=v3;
-                    transform.rotation=v3r;
+                    transform.rotation=v3r; 
                 }
             }
 
