@@ -54,6 +54,16 @@ public class Player : MonoBehaviour
                 if (colliders != null)
                 {
                     Debug.Log("kill");
+
+                    if (colliders.transform.gameObject.CompareTag("Enemy"))
+                    {
+
+                        Debug.Log("killAC");
+                    }
+                    else
+                    {
+                        Debug.Log("killW");
+                    }
                 }
             }
             else
