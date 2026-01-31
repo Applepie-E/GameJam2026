@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private float spaceTime;
+    private Collider2D colliders;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,9 +23,18 @@ public class Player : MonoBehaviour
         {
             GetComponentInParent<Couple>()?.Slow();
         }
-        
+        KillOrExchangeBySpace();
     }
 
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        colliders = other;
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        colliders = null;
+    }
     public void KillOrExchangeBySpace()
     {
         if (Input.GetKey(KeyCode.Space))
@@ -39,7 +49,20 @@ public class Player : MonoBehaviour
             }
             else
             {
-                
+                if(colliders!= null)
+                {
+                    Transform transformMid= colliders.transform.parent;
+                    Vector3 v3 = colliders.transform.position;
+                    Quaternion v3r = colliders.transform.rotation;
+
+                    colliders.transform.parent=transform.parent;
+                    colliders.transform.position=transform.position;
+                    colliders.transform.rotation=transform.rotation;
+
+                    transform.parent=transformMid;
+                    transform.position=v3;
+                    transform.rotation=v3r;
+                }
             }
 
                 spaceTime = 0;
