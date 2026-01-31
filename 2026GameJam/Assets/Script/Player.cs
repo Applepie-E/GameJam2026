@@ -1,117 +1,25 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-
-//public class Player : MonoBehaviour
-//{
-//    private float spaceTime;
-//    private Collider2D colliders;
-//    private float spaceCDTimer;
-//    [SerializeField]private float spaceCD;
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-//        spaceTime = 0;
-//    }
-
-//    // Update is called once per frame
-//    void Update()
-//    {
-//        if (Input.GetKeyDown(KeyCode.A))
-//        {
-//            GetComponentInParent<Couple>()?.Quick();
-//        }
-//        if (Input.GetKeyDown(KeyCode.D))
-//        {
-//            GetComponentInParent<Couple>()?.Slow();
-//        }
-//        KillOrExchangeBySpace();
-//    }
-
-
-//    private void OnTriggerEnter2D(Collider2D other)
-//    {
-//        colliders = other;
-//    }
-//    private void OnTriggerExit2D(Collider2D collision)
-//    {
-//        colliders = null;
-//    }
-//    public void KillOrExchangeBySpace()
-//    {
-//        //CD
-//        spaceCDTimer-= Time.deltaTime;
-//        if (spaceCDTimer > 0) return;
-//        //
-//        if (Input.GetKey(KeyCode.Space))
-//        {
-//            spaceTime += Time.deltaTime;
-//        }
-//        if (Input.GetKeyUp(KeyCode.Space))
-//        {
-//            if(spaceTime > 0.5f)
-//            {
-//                if (colliders != null)
-//                {
-//                    Debug.Log("kill");
-
-//                    if (colliders.transform.gameObject.CompareTag("Enemy"))
-//                    {
-
-//                        Debug.Log("killAC");
-//                    }
-//                    else
-//                    {
-//                        Debug.Log("killW");
-//                        // ========== ĞÂÔö£ºµ÷ÓÃUIÏÔÊ¾Èı¸ñºì¿é ==========
-//                        KillWUI_Manager.Instance?.LightNextKillWGrid();
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                if(colliders!= null)
-//                {
-//                    Debug.Log("exchange");
-//                    Transform transformMid= colliders.transform.parent;
-//                    Vector3 v3 = colliders.transform.position;
-//                    Vector3 v3r=colliders.transform.localScale;
-
-//                    colliders.transform.parent=transform.parent;
-//                    colliders.transform.position=transform.position;
-//                    colliders.transform.localScale=transform.localScale;
-
-//                    transform.parent=transformMid;
-//                    transform.position=v3;
-//                   transform.localScale=v3r;
-//                }
-//            }
-
-//                spaceTime = 0;
-//            spaceCDTimer = spaceCD;
-//        }
-//    }
-
-//}
-
-
+ï»¿using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// ¡¾ĞÂÔö¡¿ÒıÈë³¡¾°¹ÜÀíÃüÃû¿Õ¼ä£¨±ØĞë¼Ó£¬·ñÔòÎŞ·¨Ìø×ª³¡¾°£©
-using UnityEngine.SceneManagement;
+using UnityEngine.SceneManagement; // ä¿ç•™å‘½åç©ºé—´ï¼Œæ— éœ€åˆ é™¤
 
 public class Player : MonoBehaviour
 {
-    // Ô­ÓĞ±äÁ¿¡¢Start¡¢Update¡¢´¥·¢¼ì²â·½·¨¾ùÎŞĞèĞŞ¸Ä
     private float spaceTime;
     private Collider2D colliders;
     private float spaceCDTimer;
     [SerializeField] private float spaceCD;
-
+    public UIFrameAnimation ufa;
+    public int gentle;
+    public int alarm;
+    public int killNum;
     void Start()
     {
         spaceTime = 0;
+        alarm=0;
+        gentle=0;
+        killNum=0;
     }
 
     void Update()
@@ -133,45 +41,63 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            if (spaceTime > 0.5f)
+            if (spaceTime > 0.5f) // é•¿æŒ‰ç©ºæ ¼ï¼ˆ>0.5ç§’ï¼‰è§¦å‘Kill/AC
             {
                 if (colliders != null)
                 {
                     Debug.Log("kill");
-                    // ========== ºËĞÄĞŞ¸Ä£ºkillAC·ÖÖ§¼Ó³¡¾°Ìø×ª ==========
-                    if (colliders.transform.gameObject.CompareTag("Enemy"))
+                    Enemy enemy = colliders.GetComponent<Enemy>();
+                    if (enemy != null)
                     {
-                        Debug.Log("killAC");
-                        // Ö±½ÓÌø×ªµ½Kill³¡¾°£¬ÎŞÈÎºÎºì¿éµ÷ÓÃ£¨×ÔÈ»²»ÁÁºì¿é£©
-                        SceneManager.LoadScene("Kill");
+                        if (enemy.isliving)
+                        {
+                            // ================ KillACæ ¸å¿ƒè§¦å‘ä»£ç  ================
+                            Debug.Log("KillACè§¦å‘ï¼Œæ’­æ”¾4å¸§åŠ¨ç”»");
+                            ufa.Play();
+                            enemy.Dead();
+                            killNum++;
+                            // ====================================================
+                            MaskUIManager.Instance?.ActivateMask();
+                        }
+                        else
+                        {
+                            alarm++;
+                            Debug.Log("killW");
+                            KillWUI_Manager.Instance?.LightNextKillWGrid();
+                        }
                     }
                     else
                     {
                         Debug.Log("killW");
-                        // Ô­ÓĞkillW·ÖÖ§Âß¼­£ºÃ¿´Î´¥·¢µãÁÁÏÂÒ»¸öºì¿é£¬±£Áô²»±ä
+                        alarm++;
                         KillWUI_Manager.Instance?.LightNextKillWGrid();
                     }
                 }
             }
-            else
+            else // çŸ­æŒ‰ç©ºæ ¼ï¼ˆ<=0.5ç§’ï¼‰è§¦å‘äº¤æ¢
             {
-                // Ô­ÓĞ½»»»Âß¼­£¬ÍêÈ«±£Áô
                 if (colliders != null)
                 {
-                    Debug.Log("exchange");
                     Transform transformMid = colliders.transform.parent;
-                    Vector3 v3 = colliders.transform.position;
-                    Vector3 v3r = colliders.transform.localScale;
-
                     colliders.transform.parent = transform.parent;
-                    colliders.transform.position = transform.position;
-                    colliders.transform.localScale = transform.localScale;
-
                     transform.parent = transformMid;
-                    transform.position = v3;
-                    transform.localScale = v3r;
+
+                    faceDir qw = colliders.GetComponent<dancer>().LorR;
+                    colliders.GetComponent<dancer>().LorR = GetComponent<dancer>().LorR;
+                    GetComponent<dancer>().LorR = qw;
+                    GetComponent<dancer>().Face(colliders.GetComponent<dancer>().sign);
+                    colliders.GetComponent<dancer>().Face(GetComponent<dancer>().sign);
+
+                    // äº¤æ¢æˆåŠŸè§¦å‘çº¢å—çš„ä»£ç ï¼ˆä¿ç•™ï¼Œä¸å½±å“KillACåŠ¨ç”»ï¼‰
+                    ProgressBarLoader progressBar = FindObjectOfType<ProgressBarLoader>();
+                    if (progressBar != null && progressBar.IsProgressReachMark())
+                    {
+                        gentle++;
+                        ExchangeRedBlockManager.Instance?.LightNextRedBlock();
+                    }
                 }
             }
+            // é‡ç½®è®¡æ—¶å’ŒCDï¼ŒåŸæœ‰é€»è¾‘ä¿ç•™
             spaceTime = 0;
             spaceCDTimer = spaceCD;
         }
