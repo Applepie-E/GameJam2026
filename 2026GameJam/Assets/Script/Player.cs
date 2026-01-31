@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
     private float spaceTime;
     private Collider2D colliders;
+    private float spaceCDTimer;
+    [SerializeField]private float spaceCD;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +39,10 @@ public class Player : MonoBehaviour
     }
     public void KillOrExchangeBySpace()
     {
+        //CD
+        spaceCDTimer-= Time.deltaTime;
+        if (spaceCDTimer > 0) return;
+        //
         if (Input.GetKey(KeyCode.Space))
         {
             spaceTime += Time.deltaTime;
@@ -45,7 +51,10 @@ public class Player : MonoBehaviour
         {
             if(spaceTime > 0.5f)
             {
-                
+                if (colliders != null)
+                {
+                    Debug.Log("kill");
+                }
             }
             else
             {
@@ -54,19 +63,20 @@ public class Player : MonoBehaviour
                     Debug.Log("exchange");
                     Transform transformMid= colliders.transform.parent;
                     Vector3 v3 = colliders.transform.position;
-                    Quaternion v3r = colliders.transform.rotation;
+                    Vector3 v3r=colliders.transform.localScale;
 
                     colliders.transform.parent=transform.parent;
                     colliders.transform.position=transform.position;
-                    colliders.transform.rotation=transform.rotation;
+                    colliders.transform.localScale=transform.localScale;
 
                     transform.parent=transformMid;
                     transform.position=v3;
-                    transform.rotation=v3r; 
+                   transform.localScale=v3r;
                 }
             }
 
                 spaceTime = 0;
+            spaceCDTimer = spaceCD;
         }
     }
 
