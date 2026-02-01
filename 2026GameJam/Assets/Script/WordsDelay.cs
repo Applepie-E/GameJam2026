@@ -14,6 +14,13 @@ public class WordsDelay : MonoBehaviour
     private float timer = 0f; // 计时器
     private bool isFadingIn = true; // 是否正在渐入
 
+    //
+    public Image image1; // 添加Image变量
+    public Image image2;
+    private bool fir;
+    private bool sec;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,16 +35,36 @@ public class WordsDelay : MonoBehaviour
         {
             word.color = new Color(1f, 1f, 1f, 0f);
         }
+        //
+        fir=false;
+        sec=false;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (currentIndex >= words.Count)
-        {   
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (!fir)
+                {
+                    image1.gameObject.SetActive(true);
+                    fir=true;
+                }
+                else if (fir && (!sec))
+                {
+                    image2.gameObject.SetActive(true);
+                    sec=true;
+                }
+                else if (fir && sec)
+                {
 
-            SceneManager.LoadScene("Gaininform"); // 切换场景到""
+            SceneManager.LoadScene("Game"); // 切换场景到""
             return; // 如果所有文字都已显示完毕，停止更新
+                }
+            }
+
         }
 
         timer += Time.deltaTime;

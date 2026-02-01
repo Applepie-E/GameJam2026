@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; // 引入UI命名空间，操作Text组件
-
+using com;
 // 文字淡入+放大脚本，直接挂载到目标Text对象上
 public class TextFadeInScale : MonoBehaviour
 {
@@ -17,6 +17,7 @@ public class TextFadeInScale : MonoBehaviour
     // 场景加载时执行一次，初始化参数
     private void Start()
     {
+        SoundSystem.instance.Play("BE");//
         // 获取当前对象的Text组件（脚本直接挂在Text上，无需手动绑定）
         happyEndText = GetComponent<Text>();
         // 记录目标状态：缩放为1（正常大小）、颜色为原有RGB+不透明（Alpha=1）

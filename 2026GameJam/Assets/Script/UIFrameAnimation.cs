@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using com;
 /// <summary>
 /// KillAC专用帧动画脚本：4帧单播，播放后自动失活
 /// </summary>
@@ -37,10 +37,12 @@ public class UIFrameAnimation : MonoBehaviour
         {
             _targetImage.sprite = animationFrames[0];
         }
+
     }
 
     void Start()
     {
+        SoundSystem.instance.Play("Kill");
         if (autoPlay) Play();
     }
 

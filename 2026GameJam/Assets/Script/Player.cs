@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A)) GetComponentInParent<Couple>()?.Quick();
         if (Input.GetKeyDown(KeyCode.D)) GetComponentInParent<Couple>()?.Slow();
         KillOrExchangeBySpace();
+        if(ufa!=null)
+        Debug.Log("111");
+        if ((gentle >= 3) && (killNum >= 3))
+            Invoke("EndScene", 3f);
+            
     }
 
     private void OnTriggerEnter2D(Collider2D other) { colliders = other; }
@@ -53,7 +58,11 @@ public class Player : MonoBehaviour
                         {
                             // ================ KillAC核心触发代码 ================
                             Debug.Log("KillAC触发，播放4帧动画");
-                            ufa.Play();
+                            if (ufa != null)
+                            {
+                                ufa.Play();
+
+                            }
                             enemy.Dead();
                             killNum++;
                             // ====================================================
@@ -78,6 +87,7 @@ public class Player : MonoBehaviour
             {
                 if (colliders != null)
                 {
+                    transform.parent.GetComponent<Couple>().leave();
                     Transform transformMid = colliders.transform.parent;
                     colliders.transform.parent = transform.parent;
                     transform.parent = transformMid;
@@ -101,5 +111,9 @@ public class Player : MonoBehaviour
             spaceTime = 0;
             spaceCDTimer = spaceCD;
         }
+    }
+    public void EndScene()
+    {
+        SceneManager.LoadScene("HE");
     }
 }

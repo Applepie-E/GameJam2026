@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject targetMask;
     public bool isliving;
     private SpriteRenderer sr;
     [SerializeField] private Sprite deadSprite;
@@ -19,5 +20,6 @@ public class Enemy : MonoBehaviour
     {
         sr.sprite = deadSprite;
         isliving = false;
+        targetMask.SetActive(true);
     }
 }

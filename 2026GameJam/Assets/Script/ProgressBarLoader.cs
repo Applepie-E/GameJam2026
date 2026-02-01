@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -20,7 +21,7 @@ public class ProgressBarLoader : MonoBehaviour
     private float fillTotalWidth;
     public float CurrentProgress { get; private set; } = 0f; // 实时进度（供Player调用）
     private bool isLoading = false;
-
+    public Player player;
     private void Awake()
     {
         // 基础判空（有红色报错直接拖入对应组件）
@@ -49,7 +50,11 @@ public class ProgressBarLoader : MonoBehaviour
         c.a = CurrentProgress;
         progressFill.color = c;
         // 加载完成停止
-        if (CurrentProgress >= 1f) isLoading = false;
+        if (CurrentProgress >= 1f)
+        {
+            isLoading = false;
+            End();
+        }
     }
 
     /// <summary>
@@ -97,5 +102,30 @@ public class ProgressBarLoader : MonoBehaviour
         Color c = progressFill.color;
         c.a = 0;
         progressFill.color = c;
+    }
+    public void End()
+    {
+        Debug.Log(player.killNum + " " + player.alarm + " " + player.gentle);
+        if(player.killNum < 3)
+        {
+            //Be
+            Debug.Log("BE");
+            //跳转到场景BE
+            SceneManager.LoadScene("BE");
+        } 
+
+        else if ((player.killNum >= 3) && (player.alarm < 3) && (player.gentle >= 3))
+        {
+            //HE
+            Debug.Log("HE");
+            SceneManager.LoadScene("HE");
+        }
+        else if ((player.killNum >= 3) && (player.alarm < 3) && (player.gentle < 3))
+        {
+            //BE2
+            Debug.Log("BE2");
+            SceneManager.LoadScene("BE2");
+        }
+
     }
 }
